@@ -55,3 +55,6 @@ require(
     path.join(process.cwd(), "gh-list-commits-results.json")
 ).forEach(commit => console.log(commit.sha))
 '
+
+# Cleanup
+rm './gh-list-commits-results.json'
