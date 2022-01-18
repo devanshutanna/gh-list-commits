@@ -8,15 +8,18 @@ gh extension install devanshutanna/gh-list-commits
 
 ## Usage
 ```bash
-gh list-commits {pull_number}
+gh list-commits (-P|--pull)={pull_number} (-R|--repo)={repo_name} (-O|--owner)={owner_username}
 ```
 **Example**
 ```bash
-gh list-commits 100
+gh list-commits -P=100
 ```
 
 
 ### Options
+* `-P`, `--pull <number>
+    **Required** The pull request number in Github
+
 * `-O`, `--owner <string>`
     The username of the repository owner
 
