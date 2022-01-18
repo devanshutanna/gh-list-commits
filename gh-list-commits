@@ -1,37 +1,38 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Hello gh-list-commits!"
+# We have to accept 3 params:- owner, repo and PR number. Only PR Number is required.
+# We have to fetch the data using github cli like so
+# gh api /repos/{owner}/{repo}/pulls/{pull_number}/commits
+# After doing that, we need to parse the data that's returned, which will be an array and then we can simply print all of the shas of the commit.
 
-# Snippets to help get started:
+owner="{owner}"
+repo="{repo}"
 
-# Determine if an executable is in the PATH
-if ! type -p node >/dev/null; then
-  echo "Node not found on the system" >&2
-  exit 1
-fi
+# Parse Arguments
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --repo=*)
+      repo="${1#*=}"
+      ;;
+    -R=*)
+      repo="${1#*=}"
+      ;;
+    -O=*)
+      owner="${1#*=}"
+      ;;
+    --owner=*)
+      owner="${1#*=}"
+      ;;
+    *)
+      printf "***************************\n"
+      printf "* Error: Invalid argument.*\n"
+      printf "***************************\n"
+      exit 1
+  esac
+  shift
+done
 
-echo "$@"
-
-# Pass arguments through to another command
-# gh issue list "$@" -R cli/cli
-
-# Using the gh api command to retrieve and format information
-# QUERY='
-#   query($endCursor: String) {
-#     viewer {
-#       repositories(first: 100, after: $endCursor) {
-#         nodes {
-#           nameWithOwner
-#           stargazerCount
-#         }
-#       }
-#     }
-#   }
-# '
-# TEMPLATE='
-#   {{- range $repo := .data.viewer.repositories.nodes -}}
-#     {{- printf "name: %s - stargazers: %v\n" $repo.nameWithOwner $repo.stargazerCount -}}
-#   {{- end -}}
-# '
-# exec gh api graphql -f query="${QUERY}" --paginate --template="${TEMPLATE}"
+# 
+echo $repo
+echo $owner
