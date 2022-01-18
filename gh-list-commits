@@ -8,6 +8,7 @@ set -e
 
 owner="{owner}"
 repo="{repo}"
+pull="-1"
 
 # Parse Arguments
 while [ $# -gt 0 ]; do
@@ -17,6 +18,12 @@ while [ $# -gt 0 ]; do
       ;;
     -R=*)
       repo="${1#*=}"
+      ;;
+    -P=*)
+      pull="${1#*=}"
+      ;;
+    --pull=*)
+      pull="${1#*=}"
       ;;
     -O=*)
       owner="${1#*=}"
@@ -32,7 +39,19 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+if [ $pull == "-1" ]; then
+  echo "Please provide a pull request number"
+  exit 1
+fi
 
-# 
-echo $repo
-echo $owner
+# Get all commits using the github cli
+response=`gh api /repos/$owner/$repo/pulls/$pull/commits`
+
+echo $response > './gh-list-commits-results.json'
+
+node -e '
+const path = require("path")
+require(
+    path.join(process.cwd(), "gh-list-commits-results.json")
+).forEach(commit => console.log(commit.sha))
+'
