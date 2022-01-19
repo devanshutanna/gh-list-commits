@@ -44,17 +44,4 @@ if [ $pull == "-1" ]; then
   exit 1
 fi
 
-# Get all commits using the github cli
-response=`gh api /repos/$owner/$repo/pulls/$pull/commits`
-
-echo $response > './gh-list-commits-results.json'
-
-node -e '
-const path = require("path")
-require(
-    path.join(process.cwd(), "gh-list-commits-results.json")
-).forEach(commit => console.log(commit.sha))
-'
-
-# Cleanup
-rm './gh-list-commits-results.json'
+echo $(gh api /repos/$owner/$repo/pulls/$pull/commits --jq ".[].sha")
