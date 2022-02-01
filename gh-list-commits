@@ -44,4 +44,4 @@ if [ $pull == "-1" ]; then
   exit 1
 fi
 
-echo $(gh api /repos/$owner/$repo/pulls/$pull/commits --jq ".[].sha")
+echo $(gh api /repos/$owner/$repo/pulls/$pull/commits --paginate --jq ".[].sha")
